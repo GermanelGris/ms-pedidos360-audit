@@ -1,11 +1,14 @@
-package cl.duoc.pedidos360.audit.messaging;
+package cl.duoc.pedidos360.audit.dto;
 
 import java.time.Instant;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-/** Registro del tópico audit.timeline: quién / qué / cuándo / desde dónde. */
+/**
+ * Entrada de auditoría: quién / qué / cuándo / desde dónde.
+ * Contrato definido; el consumidor aún no está implementado (fuera del alcance de la EP1).
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record AuditTimelineMessage(String eventId, Instant occurredAt, Actor actor, String action, String summary,
                                    String entityType, String entityId, String source, String traceId,
