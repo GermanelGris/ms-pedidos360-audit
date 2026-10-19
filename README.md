@@ -36,6 +36,16 @@ Nunca se usa `requeue=true`. Cada envío a la DLQ queda en el log con nivel `ERR
 
 Cada evento se guarda con el actor (id, nombre y roles, propagados por el BFF en los headers `X-User-*`), el tipo (`OrderCreated`, `OrderStatusChanged`), el pedido y un resumen legible, por ejemplo `Pedido #7: CREADO -> ACEPTADO por Operador Uno`.
 
+## Listener de las DLQ
+
+`messaging/DeadLetterListener` consume `q.audit.orders.dlq`. Por cada mensaje muerto registra con nivel `ERROR` la cola de origen, el motivo y la cantidad de veces (header `x-death`: `rejected`, `expired` o `maxlen`), el exchange, la routing key, el `messageId` y el payload (hasta 2000 caracteres), y después confirma con ACK:
+
+```
+ERROR DeadLetterListener : DLQ [<dlq>] mensaje muerto: origen=<cola> motivo=rejected veces=1 exchange=<exchange> routingKeys=[<key>] messageId=<id> payload={...}
+```
+
+Un mensaje sin `x-death` es uno que el productor reenvió a la DLQ porque no tenía cola de destino (NO_ROUTE).
+
 ## API (solo lectura)
 
 | Método | Ruta | Respuesta |
